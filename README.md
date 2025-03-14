@@ -8,6 +8,7 @@
 - 支持处理带洞的多边形
 - 高效的三角剖分算法
 - 完全用 Go 语言实现，无外部依赖
+- 支持编译为 WebAssembly 并在浏览器中使用
 
 ## 安装
 
@@ -16,6 +17,8 @@ go get github.com/yourusername/earcut-go
 ```
 
 ## 使用示例
+
+### Go 语言使用
 
 ```go
 package main
@@ -38,6 +41,28 @@ func main() {
     triangles := earcut.Triangulate(vertices, nil, 2)
     fmt.Println(triangles)
 }
+```
+
+### WebAssembly 使用
+
+本库支持编译为 WebAssembly 并在浏览器中使用。详细说明请参考 [cmd/wasm/README.md](wasm/README.md)。
+
+简单示例：
+
+```javascript
+// 加载 WASM
+const go = new Go();
+WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
+    .then((result) => {
+        go.run(result.instance);
+        
+        // 定义多边形顶点
+        const vertices = [0, 0, 1, 0, 1, 1, 0, 1];
+        
+        // 进行三角剖分
+        const triangles = earcutGo(vertices, [], 2);
+        console.log(triangles);
+    });
 ```
 
 ## 文档
