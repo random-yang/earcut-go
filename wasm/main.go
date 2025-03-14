@@ -12,23 +12,23 @@ import (
 func main() {
 	c := make(chan struct{}, 0)
 
-	// 注册 earcut 函数到 JavaScript
+	// Register earcut function to JavaScript
 	js.Global().Set("earcutGo", js.FuncOf(earcutWrapper))
 
-	// 保持程序运行
+	// Keep the program running
 	<-c
 }
 
-// earcutWrapper 是 earcut 函数的 JavaScript 包装器
+// earcutWrapper is a JavaScript wrapper for the earcut function
 func earcutWrapper(this js.Value, args []js.Value) interface{} {
-	// 检查参数
+	// Check parameters
 	if len(args) < 1 {
 		return js.ValueOf(map[string]interface{}{
-			"error": "需要至少一个参数：顶点数组",
+			"error": "At least one parameter is required: vertex array",
 		})
 	}
 
-	// 获取顶点数组
+	// Get vertex array
 	jsData := args[0]
 	dataLen := jsData.Length()
 	data := make([]float64, dataLen)
@@ -36,7 +36,7 @@ func earcutWrapper(this js.Value, args []js.Value) interface{} {
 		data[i] = jsData.Index(i).Float()
 	}
 
-	// 获取可选的洞索引数组
+	// Get optional hole indices array
 	var holeIndices []int
 	if len(args) > 1 && !args[1].IsNull() && !args[1].IsUndefined() {
 		jsHoles := args[1]
@@ -47,16 +47,16 @@ func earcutWrapper(this js.Value, args []js.Value) interface{} {
 		}
 	}
 
-	// 获取可选的维度参数
+	// Get optional dimension parameter
 	dim := 2
 	if len(args) > 2 && !args[2].IsNull() && !args[2].IsUndefined() {
 		dim = args[2].Int()
 	}
 
-	// 调用 earcut 函数
+	// Call earcut function
 	triangles := earcut.Earcut(data, holeIndices, dim)
 
-	// 将结果转换为 JavaScript 数组
+	// Convert result to JavaScript array
 	jsTriangles := js.Global().Get("Array").New(len(triangles))
 	for i, idx := range triangles {
 		jsTriangles.SetIndex(i, idx)

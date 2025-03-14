@@ -1,38 +1,38 @@
 #!/bin/bash
 
-# 设置 GOOS 和 GOARCH 环境变量，以便编译为 WebAssembly
+# Set GOOS and GOARCH environment variables for WebAssembly compilation
 export GOOS=js
 export GOARCH=wasm
 
-# 编译 Go 代码为 WebAssembly
-echo "编译 Go 代码为 WebAssembly..."
+# Compile Go code to WebAssembly
+echo "Compiling Go code to WebAssembly..."
 go build -o main.wasm main.go
 
-# 复制 wasm_exec.js 文件（Go 提供的 JavaScript 胶水代码）
-echo "复制 wasm_exec.js 文件..."
+# Copy wasm_exec.js file (JavaScript glue code provided by Go)
+echo "Copying wasm_exec.js file..."
 WASM_EXEC_JS="$(go env GOROOT)/lib/wasm/wasm_exec.js"
 if [ ! -f "$WASM_EXEC_JS" ]; then
-    # 尝试旧路径
+    # Try old path
     WASM_EXEC_JS="$(go env GOROOT)/misc/wasm/wasm_exec.js"
     if [ ! -f "$WASM_EXEC_JS" ]; then
-        # 尝试查找文件
+        # Try to find the file
         WASM_EXEC_JS=$(find "$(go env GOROOT)" -name "wasm_exec.js" | head -n 1)
         if [ -z "$WASM_EXEC_JS" ]; then
-            echo "错误：无法找到 wasm_exec.js 文件"
+            echo "Error: Cannot find wasm_exec.js file"
             exit 1
         fi
     fi
 fi
 
-echo "使用 wasm_exec.js 文件：$WASM_EXEC_JS"
+echo "Using wasm_exec.js file: $WASM_EXEC_JS"
 cp "$WASM_EXEC_JS" .
 
-echo "编译完成！"
-echo "现在您可以使用 HTTP 服务器来提供这些文件："
+echo "Compilation complete!"
+echo "Now you can use an HTTP server to serve these files:"
 echo "  - main.wasm"
 echo "  - wasm_exec.js"
 echo "  - index.html"
 echo ""
-echo "例如，您可以使用以下命令启动一个简单的 HTTP 服务器："
+echo "For example, you can start a simple HTTP server with the following command:"
 echo "  python3 -m http.server"
-echo "然后在浏览器中访问 http://localhost:8000" 
+echo "Then visit http://localhost:8000 in your browser" 

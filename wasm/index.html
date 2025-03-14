@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Earcut Go WASM 测试</title>
+    <title>Earcut Go WASM Demo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,83 +35,83 @@
     </style>
 </head>
 <body>
-    <h1>Earcut Go WASM 测试</h1>
+    <h1>Earcut Go WASM Demo</h1>
     
-    <p>这个页面演示了如何使用 Go 编写的 Earcut 库的 WebAssembly 版本。</p>
+    <p>This page demonstrates using the WebAssembly version of the Earcut library written in Go.</p>
     
     <div>
-        <button id="triangulateBtn">三角剖分示例多边形</button>
+        <button id="triangulateBtn">Triangulate Example Polygon</button>
     </div>
     
     <canvas id="canvas" width="600" height="400"></canvas>
     
-    <h3>结果：</h3>
-    <pre id="result">点击按钮运行三角剖分...</pre>
+    <h3>Result:</h3>
+    <pre id="result">Click button to run triangulation...</pre>
     <script src="wasm_exec.js"></script>
     <script>
-        // 加载 WASM
+        // Load WASM
         const go = new Go();
         
         WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
             .then((result) => {
                 go.run(result.instance);
-                console.log("WASM 已加载");
+                console.log("WASM loaded");
                 
-                // 启用按钮
+                // Enable button
                 document.getElementById("triangulateBtn").disabled = false;
             })
             .catch(err => {
-                console.error("加载 WASM 失败:", err);
-                document.getElementById("result").textContent = "加载 WASM 失败: " + err.message;
+                console.error("Failed to load WASM:", err);
+                document.getElementById("result").textContent = "Failed to load WASM: " + err.message;
             });
         
-        // 示例多边形（带一个洞）
+        // Example polygon (with one hole)
         const polygon = [
-            // 外部轮廓 (顺时针)
+            // Outer contour (clockwise)
             100, 100,  // 0
             500, 100,  // 1
             500, 300,  // 2
             100, 300,  // 3
-            // 内部洞 (逆时针)
+            // Inner hole (counter-clockwise)
             200, 150,  // 4
             200, 250,  // 5
             400, 250,  // 6
             400, 150   // 7
         ];
         
-        const holeIndices = [4]; // 洞从索引 4 开始
+        const holeIndices = [4]; // Hole starts at index 4
         
-        // 三角剖分并绘制
+        // Triangulate and draw
         document.getElementById("triangulateBtn").addEventListener("click", function() {
             if (typeof earcutGo === "undefined") {
-                document.getElementById("result").textContent = "WASM 尚未加载完成，请稍候...";
+                document.getElementById("result").textContent = "WASM not loaded yet, please wait...";
                 return;
             }
             
             try {
-                // 调用 WASM 中的 earcut 函数
+                // Call earcut function from WASM
                 const triangles = earcutGo(polygon, holeIndices, 2);
                 
-                // 显示结果
-                document.getElementById("result").textContent = "三角形索引: " + JSON.stringify(triangles);
+                // Display result
+                document.getElementById("result").textContent = "Triangle indices: " + JSON.stringify(triangles);
                 
-                // 绘制结果
+                // Draw result
                 drawTriangulation(polygon, triangles);
             } catch (err) {
-                console.error("三角剖分错误:", err);
-                document.getElementById("result").textContent = "三角剖分错误: " + err.message;
+                console.error("Triangulation error:", err);
+                document.getElementById("result").textContent = "Triangulation error: " + err.message;
             }
         });
         
-        // 绘制三角剖分结果
+        // Draw triangulation result
         function drawTriangulation(vertices, triangles) {
             const canvas = document.getElementById("canvas");
             const ctx = canvas.getContext("2d");
             
-            // 清除画布
+            // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // 绘制原始多边形
+            // Draw original polygon
             ctx.beginPath();
             ctx.moveTo(vertices[0], vertices[1]);
             for (let i = 2; i < 8; i += 2) {
@@ -121,7 +121,7 @@
             ctx.strokeStyle = "#000";
             ctx.stroke();
             
-            // 绘制洞
+            // Draw hole
             ctx.beginPath();
             ctx.moveTo(vertices[8], vertices[9]);
             for (let i = 10; i < 16; i += 2) {
@@ -131,7 +131,7 @@
             ctx.strokeStyle = "#000";
             ctx.stroke();
             
-            // 绘制三角形
+            // Draw triangles
             for (let i = 0; i < triangles.length; i += 3) {
                 const a = triangles[i] * 2;
                 const b = triangles[i + 1] * 2;
@@ -143,17 +143,19 @@
                 ctx.lineTo(vertices[c], vertices[c + 1]);
                 ctx.closePath();
                 
-                // 随机颜色
-                const r = Math.floor(Math.random() * 200 + 55);
-                const g = Math.floor(Math.random() * 200 + 55);
-                const blue = Math.floor(Math.random() * 200 + 55);
-                
-                ctx.fillStyle = `rgba(${r}, ${g}, ${blue}, 0.5)`;
+                // Random color
+                const colors = [
+                    '#FAE102',
+                    '#1042F3',
+                    '#E95400',
+                    '#FFFFFF',
+                ];
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
                 ctx.fill();
-                ctx.strokeStyle = "#333";
+                ctx.strokeStyle = "#000";
                 ctx.stroke();
             }
         }
     </script>
 </body>
-</html> 
+</html>

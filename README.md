@@ -1,24 +1,30 @@
 # Earcut-Go
 
-这是一个用 Go 语言实现的多边形三角剖分库，基于 [earcut](https://github.com/mapbox/earcut) 算法。
+> Note: This is a toy project, initially created to test the capabilities of programming agents.
 
-## 功能特性
+This is a polygon triangulation library implemented in Go, based on the [earcut](https://github.com/mapbox/earcut) algorithm.
 
-- 支持处理简单多边形
-- 支持处理带洞的多边形
-- 高效的三角剖分算法
-- 完全用 Go 语言实现，无外部依赖
-- 支持编译为 WebAssembly 并在浏览器中使用
+## Features
 
-## 安装
+- Support for simple polygons
+- Support for polygons with holes
+- Efficient triangulation algorithm
+- Fully implemented in Go with no external dependencies
+- Support for compilation to WebAssembly for use in browsers
+
+## Documentation
+
+[English](README.md) | [中文文档](README_zh.md)
+
+## Installation
 
 ```bash
 go get github.com/yourusername/earcut-go
 ```
 
-## 使用示例
+## Usage Examples
 
-### Go 语言使用
+### Go Usage
 
 ```go
 package main
@@ -29,46 +35,42 @@ import (
 )
 
 func main() {
-    // 定义多边形顶点
+    // Define polygon vertices
     vertices := []float64{
-        0, 0,  // 第一个顶点
-        1, 0,  // 第二个顶点
-        1, 1,  // 第三个顶点
-        0, 1,  // 第四个顶点
+        0, 0,  // First vertex
+        1, 0,  // Second vertex
+        1, 1,  // Third vertex
+        0, 1,  // Fourth vertex
     }
 
-    // 进行三角剖分
+    // Perform triangulation
     triangles := earcut.Triangulate(vertices, nil, 2)
     fmt.Println(triangles)
 }
 ```
 
-### WebAssembly 使用
+### WebAssembly Usage
 
-本库支持编译为 WebAssembly 并在浏览器中使用。详细说明请参考 [cmd/wasm/README.md](wasm/README.md)。
+This library supports compilation to WebAssembly for use in browsers. For detailed instructions, please refer to [wasm/README.md](wasm/README.md).
 
-简单示例：
+Simple example:
 
 ```javascript
-// 加载 WASM
+// Load WASM
 const go = new Go();
 WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
     .then((result) => {
         go.run(result.instance);
         
-        // 定义多边形顶点
+        // Define polygon vertices
         const vertices = [0, 0, 1, 0, 1, 1, 0, 1];
         
-        // 进行三角剖分
+        // Perform triangulation
         const triangles = earcutGo(vertices, [], 2);
         console.log(triangles);
     });
 ```
 
-## 文档
+## License
 
-详细的 API 文档请参考 [GoDoc](https://pkg.go.dev/github.com/yourusername/earcut-go)。
-
-## 许可证
-
-本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details. 

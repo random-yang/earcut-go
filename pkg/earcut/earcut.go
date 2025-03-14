@@ -476,7 +476,7 @@ func eliminateHoles(data []float64, holeIndices []int, outerNode *Node, dim int)
 
 // sort an array of nodes by x, then y, then slope
 func sortByXYSlope(nodes []*Node) {
-	// 使用Go的sort包进行排序
+	// Sort using Go's sort package
 	sort.Slice(nodes, func(i, j int) bool {
 		a, b := nodes[i], nodes[j]
 		if a.x != b.x {
@@ -485,7 +485,7 @@ func sortByXYSlope(nodes []*Node) {
 		if a.y != b.y {
 			return a.y < b.y
 		}
-		// 当两个洞的最左点在同一个顶点时，按逆时针排序
+		// when two holes' leftmost points are at the same vertex, sort counterclockwise
 		aSlope := (a.next.y - a.y) / (a.next.x - a.x)
 		bSlope := (b.next.y - b.y) / (b.next.x - b.x)
 		return aSlope < bSlope

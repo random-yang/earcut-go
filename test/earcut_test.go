@@ -38,7 +38,7 @@ func TestTrianglesBuilding(t *testing.T) {
 		710, 113, 666, 113, 666, 112,
 	}
 	indices := earcut.Triangulate(data, nil, 2)
-	assert.Equal(t, 39, len(indices), "应该生成13个三角形(39个索引)")
+	assert.Equal(t, 39, len(indices), "Should generate 13 triangles (39 indices)")
 }
 
 // func TestComplexPolygon(t *testing.T) {
@@ -47,7 +47,7 @@ func TestTrianglesBuilding(t *testing.T) {
 // 		7, 13, 7, 15, 17, 17,
 // 	}
 // 	indices := Triangulate(data, nil, 2)
-// 	assert.Equal(t, 6, len(indices), "应该生成6个三角形(18个索引)")
+// 	assert.Equal(t, 6, len(indices), "Should generate 6 triangles (18 indices)")
 // }
 
 func TestComplexPolygonWithHole(t *testing.T) {
@@ -59,7 +59,7 @@ func TestComplexPolygonWithHole(t *testing.T) {
 	}
 	holes := []int{6}
 	indices := earcut.Triangulate(data, holes, 2)
-	assert.Equal(t, 8*3, len(indices), "应该生成8个三角形(24个索引)")
+	assert.Equal(t, 8*3, len(indices), "Should generate 8 triangles (24 indices)")
 }
 
 // func TestComplexPolygonWithHoles(t *testing.T) {
@@ -78,7 +78,7 @@ func TestComplexPolygonWithHole(t *testing.T) {
 // 	holes := []int{20, 34, 39}
 // 	indices := Triangulate(data, holes, 2)
 // 	fmt.Println(indices)
-// 	assert.Equal(t, 42*3, len(indices), "应该生成14个三角形(42个索引)")
+// 	assert.Equal(t, 42*3, len(indices), "Should generate 14 triangles (42 indices)")
 // }
 
 func TestPolygonWithHoles(t *testing.T) {
@@ -89,7 +89,7 @@ func TestPolygonWithHoles(t *testing.T) {
 	}
 	holes := []int{4, 5, 6, 7}
 	indices := earcut.Triangulate(data, holes, 2)
-	assert.Equal(t, 27, len(indices), "应该生成9个三角形(27个索引)")
+	assert.Equal(t, 27, len(indices), "Should generate 9 triangles (27 indices)")
 }
 
 func TestPolygonWithMultipleHoles(t *testing.T) {
@@ -100,5 +100,5 @@ func TestPolygonWithMultipleHoles(t *testing.T) {
 	}
 	holes := []int{4, 7}
 	indices := earcut.Triangulate(data, holes, 2)
-	assert.Equal(t, 30, len(indices), "应该生成10个三角形(30个索引)")
+	assert.Equal(t, 30, len(indices), "Should generate 10 triangles (30 indices)")
 }

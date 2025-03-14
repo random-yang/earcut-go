@@ -1,84 +1,85 @@
 # Earcut-Go WebAssembly
+![screen](./screen.png)
 
-这个目录包含了将 Earcut-Go 编译为 WebAssembly 并通过 JavaScript 调用的相关文件。
+This directory contains files related to compiling Earcut-Go to WebAssembly and calling it from JavaScript.
 
-## 文件说明
+## File Description
 
-- `main.go` - Go 代码入口点，将 Earcut 函数导出为 WebAssembly
-- `build.sh` - 编译脚本，用于将 Go 代码编译为 WebAssembly
-- `serve.sh` - 启动一个简单的 HTTP 服务器，用于提供 WASM 文件
-- `index.html` - 示例 HTML 页面，演示如何使用 WASM 版本的 Earcut
+- `main.go` - Go code entry point, exporting the Earcut function as WebAssembly
+- `build.sh` - Compilation script for compiling Go code to WebAssembly
+- `serve.sh` - Starts a simple HTTP server to serve the WASM file
+- `index.html` - Example HTML page demonstrating how to use the WASM version of Earcut
 
-## 运行示例
+## Running the Example
 
-1. 启动 HTTP 服务器：
+1. Start the HTTP server:
 
 ```bash
 chmod +x serve.sh
 ./serve.sh
 ```
 
-2. 在浏览器中访问 http://localhost:8000
+2. Visit http://localhost:8000 in your browser
 
-## 编译步骤
+## Compilation Steps
 
-1. 确保您已安装 Go 1.16 或更高版本（本项目使用 Go 1.24.1 开发）
-2. 运行编译脚本：
+1. Ensure you have Go 1.16 or higher installed (this project was developed with Go 1.24.1)
+2. Run the compilation script:
 
 ```bash
 chmod +x build.sh
 ./build.sh
 ```
 
-这将生成以下文件：
-- `main.wasm` - 编译后的 WebAssembly 文件
-- `wasm_exec.js` - Go 提供的 JavaScript 胶水代码
+This will generate the following files:
+- `main.wasm` - The compiled WebAssembly file
+- `wasm_exec.js` - JavaScript glue code provided by Go
 
-## 在您自己的项目中使用
+## Using in Your Own Project
 
-要在您自己的 JavaScript 项目中使用 Earcut-Go WebAssembly，您需要：
+To use Earcut-Go WebAssembly in your own JavaScript project, you need to:
 
-1. 复制 `main.wasm` 和 `wasm_exec.js` 文件到您的项目中
-2. 在 HTML 中引入 `wasm_exec.js`：
+1. Copy the `main.wasm` and `wasm_exec.js` files to your project
+2. Include `wasm_exec.js` in your HTML:
 
 ```html
 <script src="wasm_exec.js"></script>
 ```
 
-3. 加载并初始化 WebAssembly：
+3. Load and initialize WebAssembly:
 
 ```javascript
 const go = new Go();
 WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
     .then((result) => {
         go.run(result.instance);
-        console.log("WASM 已加载");
+        console.log("WASM loaded");
     });
 ```
 
-4. 调用 Earcut 函数：
+4. Call the Earcut function:
 
 ```javascript
-// 多边形顶点数组 [x0, y0, x1, y1, ...]
+// Polygon vertices array [x0, y0, x1, y1, ...]
 const data = [0, 0, 100, 0, 100, 100, 0, 100];
 
-// 可选：洞的索引数组
+// Optional: hole indices array
 const holeIndices = [];
 
-// 可选：维度 (默认为 2)
+// Optional: dimension (default is 2)
 const dim = 2;
 
-// 调用 WASM 中的 earcut 函数
+// Call the earcut function in WASM
 const triangles = earcutGo(data, holeIndices, dim);
-console.log(triangles); // 三角形索引数组
+console.log(triangles); // Triangle indices array
 ```
 
-## API 说明
+## API Description
 
 `earcutGo(data, holeIndices, dim)`
 
-- `data`: 顶点坐标数组，格式为 [x0, y0, x1, y1, ...]
-- `holeIndices`: 洞的起始索引数组，例如 [5, 10] 表示从索引 5 和 10 开始的顶点分别是两个洞的起始点
-- `dim`: 每个顶点的坐标维度，默认为 2
+- `data`: Vertex coordinate array in the format [x0, y0, x1, y1, ...]
+- `holeIndices`: Array of starting indices for holes, e.g., [5, 10] means vertices starting at indices 5 and 10 are the starting points of two holes
+- `dim`: Dimension of each vertex coordinate, default is 2
 
-返回值：三角形索引数组，每三个索引表示一个三角形 
+Return value: Array of triangle indices, where every three indices represent one triangle 
